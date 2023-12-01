@@ -8,16 +8,14 @@ int     main(int ac ,char **av)
         std::cout << "Invalid number of arguments" << std::endl;
         return (0);
     }
-
     try 
     {
-        BitcoinExchange     database(av[1]);
-        
-        database.extract_data("data.txt");
+        BitcoinExchange     database("data.csv");
+        database.extract_data(av[1]);
     } 
-    catch (const char *exp) 
+    catch (const std::exception& exp) 
     {
-        std::cout << exp << std::endl;   
+        std::cout << exp.what() << std::endl;   
     }
     return (0);
     //sscanf(const char *, const char *, ...);

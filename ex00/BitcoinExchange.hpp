@@ -7,6 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <stdio.h>
+#include <exception>
+#include <ctime>
 
 class BitcoinExchange
 {   
@@ -17,11 +20,15 @@ class BitcoinExchange
         ~BitcoinExchange();
 
         void    extract_data(std::string file);
-        void    validDate(const std::string& value) const;
-        void    checkYear(const std::string& value) const;
-        void    checkMonth(const std::string& value) const;
-        void    checkDay(const std::string& value) const;
-    //extract data
+	std::pair<std::string, float> checkData(std::string value) const;
+	int     checkDateValue(int& year, int& month, int& day) const;
+	int	checkYear(int& year) const;  
+	int	checkMonth(int& year, int& month) const;  
+	int	checkDay(int& year, int& month, int& day) const;
+	std::string	badInput(std::string& value) const;
+	tm      *getTime() const;
+	void    printRecord(const std::pair<std::string, float>& p);	
+//extract data
     //parse
     //print_data
     private:   
