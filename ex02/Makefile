@@ -6,7 +6,7 @@
 #    By: mtaib <mtaib@student.1337.ma>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/18 18:16:15 by mtaib             #+#    #+#              #
-#    Updated: 2023/12/02 12:31:07 by mtaib            ###   ########.fr        #
+#    Updated: 2023/12/04 13:18:54 by mtaib            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SRC = main.cpp PmergeMe.cpp
 OSRC = $(SRC:.cpp=.o)
 
 NAME = PmergeMe
-CFLAGS = -Wextra -Werror -Wall -std=c++98
+CFLAGS = -Wextra -Werror -Wall -std=c++98 
 
 %.o:%.cpp PmergeMe.hpp
 	c++ -c $(CFLAGS)  $<

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 
+typedef  std::vector<int> vect_int;
+typedef  std::vector< std::pair<vect_int, std::vector<vect_int>::iterator> > pend_vec;
+ 
 class   PmergeMe
 {
     public:
@@ -16,11 +19,12 @@ class   PmergeMe
         std::vector<std::vector<int> >     make_pairs(std::vector<int>& data);
         void    sort_pairs(std::vector<std::vector<int> >& v);
         void    copy_elements_to_data(std::vector<int>& data, std::vector<std::vector<int> >& v);
+        void    insertion_sort(vect_int& data);
+        void    insert_pend_to_chain(std::vector<vect_int>& main_chain, pend_vec& pend);
 
     private:
         int     num_of_elements;
         std::vector<int> _v;
 
 };
-typedef  std::vector<int> vect_int;
 #endif

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 void    merge(std::vector<int>& left_part, std::vector<int>& right_part, std::vector<int>& v);
@@ -92,17 +93,25 @@ void    merge(std::vector<int>& left_part, std::vector<int>& right_part, std::ve
     }
 }
 
+bool    compare(int a, int b)
+{
+    if (a < b)
+        return true;
+    return false;
+}
 int main()
 {
     int arr[] = { 8, 7,6, 5, 1, 2, 3, 4};
     int n = sizeof(arr) / sizeof(arr[0]);
  
     std::vector<int> v(arr, arr + n);
-    divide(v);
-    std::vector<int>::iterator it = v.begin();
-    while (it != v.end())
-    {
-        std::cout << *it << " ";
-        it++;
-    }
+    // divide(v);
+    // std::vector<int>::iterator it = v.begin();
+    // while (it != v.end())
+    // {
+    //     std::cout << *it << " ";
+    //     it++;
+    // }
+    std::vector<int>::iterator it;
+    it = std::lower_bound(v.begin(), v.end(), 6, compare);
 }
