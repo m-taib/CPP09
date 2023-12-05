@@ -112,6 +112,14 @@ int main()
     //     std::cout << *it << " ";
     //     it++;
     // }
-    std::vector<int>::iterator it;
-    it = std::lower_bound(v.begin(), v.end(), 6, compare);
+    std::vector<int>::iterator it = v.begin();
+    it++;
+    v.erase(it);
+     std::vector<int>::iterator i = v.begin();
+    while (i != v.end())
+    {
+        std::cout << *i << " ";
+        i++;
+    }
+    // it = std::lower_bound(v.begin(), v.end(), 6, compare);
 }

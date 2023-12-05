@@ -9,12 +9,20 @@ int     main()
     std::vector<int> v(arr, arr + n);
     
     PmergeMe a;
-    a.merge_sort(v);
     // int		i = -1;
-    // std::cout << "original vector" << std::endl;
+    // std::cout << "original vector before : " << std::endl;
     
     // while (++i < (int)v.size())
     // {
-	//     std::cout << v[i] << std::endl;
+	//     std::cout << v[i] << " ";
+    // }
+    // std::cout << std::endl;
+    a.merge_sort(v);
+    // i = -1;
+    // std::cout << "original vector after :" << std::endl;
+    
+    // while (++i < (int)v.size())
+    // {
+	//     std::cout << v[i] << " ";
     // }
 }
