@@ -161,6 +161,7 @@ void    PmergeMe::insertion_sort(vect_int& data)
     vect_int temp;
     std::vector<vect_int>::iterator it;
     std::vector<vect_int>::iterator tmp;
+    int     i = -1;
 
     v = make_pairs(data);
     
@@ -168,16 +169,16 @@ void    PmergeMe::insertion_sort(vect_int& data)
     _pend.clear();
     _main_chain.reserve(v.size());
     
-    it = v.begin();
+    temp.clear();
     if ((int)v.back().size() != num_of_elements)
     {
         temp = v.back();
         v.pop_back();
     }
+    it = v.begin();
 
-    _main_chain.push_back(*(it++));
-    _main_chain.push_back(*(it++));
-
+    while (it != v.end() && ++i < 2)
+        _main_chain.push_back(*(it++));
     while (it != v.end())
     {
         if (it + 1 == v.end())
@@ -185,9 +186,8 @@ void    PmergeMe::insertion_sort(vect_int& data)
             _pend.push_back(make_pair(*(it), _main_chain.end())); 
             break ; 
         }
-        tmp = _main_chain.insert(_main_chain.end(), *(it + (it + 1 != v.end())));
-        if (it + 1 != v.end())
-            _pend.push_back(make_pair(*(it), tmp));  
+        tmp = _main_chain.insert(_main_chain.end(), *(it + 1));
+        _pend.push_back(make_pair(*(it), tmp));  
         it += 2;
     }
     // if (num_of_elements == 1 && rest != -1)
@@ -196,6 +196,12 @@ void    PmergeMe::insertion_sort(vect_int& data)
     //     _pend.push_back(make_pair(v2, _main_chain.end()));
     // }
     insert_pend_to_chain();
+    if (temp.size())
+    {
+        _main_chain.insert(_main_chain.end(), temp);
+        std::cout << "here" << std::endl;
+    }
+
     // std::cout << "*****MAIN CHAIN*****\n";
     // print_pairs(_main_chain);
     // std::cout << "*****END CHAIN*****\n";
@@ -249,7 +255,6 @@ void    PmergeMe::merge_sort(vect_int& data)
         //elmn_size /= 2;
     }
     insertion_sort(data);
-   
     // std::cout << "\n";
     // std::cout << "original vector" << std::endl;
     //vect_int::iterator it = data.begin();
