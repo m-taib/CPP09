@@ -6,7 +6,8 @@
 
 typedef  std::vector<int> vect_int;
 typedef  std::vector< std::pair<vect_int, std::vector<vect_int>::iterator> > pend_vec;
- 
+
+
 class   PmergeMe
 {
     public:
@@ -20,11 +21,18 @@ class   PmergeMe
         void    sort_pairs(std::vector<std::vector<int> >& v);
         void    copy_elements_to_data(std::vector<int>& data, std::vector<std::vector<int> >& v);
         void    insertion_sort(vect_int& data);
-        void    insert_pend_to_chain(std::vector<vect_int>& main_chain, pend_vec& pend);
+        void    insert_pend_to_chain();
+        void    update_iterators(pend_vec::iterator begin);
+        int     getComparisonsNum() const;
 
     private:
+
         int     num_of_elements;
+        int     rest;
         std::vector<int> _v;
+        std::vector<vect_int> _main_chain;
+        pend_vec    _pend;
+
 
 };
 #endif

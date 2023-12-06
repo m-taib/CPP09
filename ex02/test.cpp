@@ -95,13 +95,13 @@ void    merge(std::vector<int>& left_part, std::vector<int>& right_part, std::ve
 
 bool    compare(int a, int b)
 {
-    if (a < b)
+    if (b >= a)
         return true;
     return false;
 }
 int main()
 {
-    int arr[] = { 8, 7,6, 5, 1, 2, 3, 4};
+    int arr[] = { 1, 2,3, 4, 5, 6, 7, 8};
     int n = sizeof(arr) / sizeof(arr[0]);
  
     std::vector<int> v(arr, arr + n);
@@ -113,13 +113,14 @@ int main()
     //     it++;
     // }
     std::vector<int>::iterator it = v.begin();
-    it++;
-    v.erase(it);
-     std::vector<int>::iterator i = v.begin();
-    while (i != v.end())
-    {
-        std::cout << *i << " ";
-        i++;
-    }
-    // it = std::lower_bound(v.begin(), v.end(), 6, compare);
+    // it++;
+    // v.erase(it);
+    //  std::vector<int>::iterator i = v.begin();
+    // while (i != v.end())
+    // {
+    //     std::cout << *i << " ";
+    //     i++;
+    // }
+    it = std::lower_bound(v.begin(), v.end(), 6, compare);
+    std::cout << *it << std::endl;
 }
