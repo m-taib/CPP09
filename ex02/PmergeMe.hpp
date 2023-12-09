@@ -18,11 +18,11 @@ class   PmergeMe
 
         void    merge_sort(std::vector<int>& data);
         std::vector<std::vector<int> >     make_pairs(std::vector<int>& data);
-        void    sort_pairs(std::vector<std::vector<int> >& v);
+        void    sort_each_pair(std::vector<std::vector<int> >& v);
         void    copy_elements_to_data(std::vector<int>& data, std::vector<std::vector<int> >& v);
         void    insertion_sort(vect_int& data);
         void    insert_pend_to_chain();
-        void    update_iterators(pend_vec::iterator begin);
+        void    update_iterators(pend_vec::iterator begin, std::vector<vect_int>::iterator pos);
         int     getComparisonsNum() const;
 
     private:

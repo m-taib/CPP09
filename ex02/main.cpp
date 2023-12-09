@@ -9,25 +9,21 @@ void    print_elements(std::vector<int>& v)
         std::cout << v[i] << " ";
     }
 }
-int     main()
+int     main(int ac, char **av)
 {
-    int arr[] = {1466,1308,1263,1494,910,2114,2418,1876,1706,960,310,1655,2843,2199,2005,1785,1214,618,1865,
-            2941,1549,1037,297,1100,875, 1};
-    int n = sizeof(arr) / sizeof(arr[0]);
- 
-    std::vector<int> v(arr, arr + n);
-    
+    std::vector<int> v;
+    int     i = 1;
+
+    // 20 10 9 1 6 21 13 19 14 5 8 7 3 9 19 2 16 5 21 13 13
+    (void)ac;
+    while (av[i])
+    {
+        v.push_back(std::atoi(av[i++]));
+    }
     PmergeMe a;
-   
-    // std::cout << "original vector before : " << std::endl;
-    
-    // while (++i < (int)v.size())
-    // {
-	//     std::cout << v[i] << " ";
-    // }
-    // std::cout << std::endl;
+
     a.merge_sort(v);
-     int		i = -1;
+    i = -1;
     std::cout << "sorted : " ;
     while (++i < (int)v.size())
     {

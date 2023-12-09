@@ -62,7 +62,7 @@ std::vector<vect_int> PmergeMe::make_pairs(vect_int& data)
     return (v);
 }
 
-void    PmergeMe::sort_pairs(std::vector<vect_int>& v)
+void    PmergeMe::sort_each_pair(std::vector<vect_int>& v)
 {
     vect_int tmp;
     std::vector<vect_int>::iterator it;
@@ -76,7 +76,8 @@ void    PmergeMe::sort_pairs(std::vector<vect_int>& v)
 	    it = begin;
 	    ++it;
         comp_num++;
-	    if (it->back() < begin->back())
+	    if ((int)it->size() == num_of_elements 
+              && it->back() < begin->back())
 	    {
             tmp = *begin;
             *begin = *it;
@@ -111,49 +112,87 @@ void    PmergeMe::copy_elements_to_data(vect_int& data, std::vector<vect_int>& v
 
 bool    compare(const vect_int& main_chain, const vect_int& pend) 
 {
-    /// ask if its in class or not
-
-    // if (pend.back() <= main_chain.back())
-    //     {
-    //         std::cout << pend.back() << "-" << main_chain.back() << std::endl;
-    //         return (1);
-    //     }
-    // std::cout << "not inserted" << std::endl;
     comp_num++;
-    return (main_chain.back() < pend.back());
+    return (main_chain.back() <= pend.back());
 }
 
-void    PmergeMe::update_iterators(pend_vec::iterator begin)
+void    PmergeMe::update_iterators(pend_vec::iterator begin, std::vector<vect_int>::iterator pos)
 {
     pend_vec::iterator end = _pend.end();
 
     while (begin != end)
     {
-        begin->second++;
+        if (begin->second >= pos)
+        {
+            begin->second++;
+        }
         begin++;
     }
-}
-int     PmergeMe::getComparisonsNum() const
-{
-    return (comp_num);
 }
 
 void    PmergeMe::insert_pend_to_chain()
 {
     pend_vec::iterator begin = _pend.begin();
-    pend_vec::iterator end = _pend.end();
     std::vector<vect_int>::iterator it;
+    
+    long int     jacob_sthal[] = { 
+	   2, 2, 6, 10, 22, 42, 86, 170, 342, 682, 1366,
+        2730, 5462, 10922, 21846, 43690, 87382, 174762, 349526, 699050,
+        1398102, 2796202, 5592406, 11184810, 22369622, 44739242, 89478486,
+        178956970, 357913942, 715827882, 1431655766, 2863311530, 5726623062,
+        11453246122, 22906492246, 45812984490 };
 
-    while (begin != end)
-    {   
-        it = std::lower_bound(_main_chain.begin(), begin->second, begin->first, compare);
-        _main_chain.insert(it, begin->first);
-        
-        update_iterators(begin + 1);
-        begin++;
+   int		i = 0;
+    // int     j = -1;
+    
+    // with jacob sthal number we will what we have to push first 
+    // we will push more than 1 element at time
+    	// from end to begin
+
+    while (_pend.size())
+    {  
+        begin = _pend.begin();
+        begin += (jacob_sthal[i] - 1);
+        if (begin >= _pend.end())
+            begin = _pend.end() - 1;
+        while (true)
+        {
+            it = std::lower_bound(_main_chain.begin(), begin->second, 
+            begin->first, compare);
+            _main_chain.insert(it, begin->first);
+            _pend.erase(begin);
+            update_iterators(_pend.begin(), it);
+            if (begin == _pend.begin())
+                break ;
+            begin--;
+        }
+        i++;
     }
 
 }
+
+// void    PmergeMe::insert_pend_to_chain()
+// {
+//     pend_vec::iterator begin = _pend.begin();
+//     pend_vec::iterator end = _pend.end();
+//     std::vector<vect_int>::iterator it;
+    
+//     while (begin != end)
+//     {   
+//         it = std::lower_bound(_main_chain.begin(), begin->second, begin->first, compare);
+//         _main_chain.insert(it, begin->first);
+//         update_iterators(begin + 1, it);
+//         begin++;
+//     }
+
+// }
+
+int     PmergeMe::getComparisonsNum() const
+{
+    return (comp_num);
+}
+
+
     
 void    PmergeMe::insertion_sort(vect_int& data)
 {
@@ -162,13 +201,33 @@ void    PmergeMe::insertion_sort(vect_int& data)
     std::vector<vect_int>::iterator it;
     std::vector<vect_int>::iterator tmp;
     int     i = -1;
-
-    v = make_pairs(data);
+    // int     j = -1;
     
+    v = make_pairs(data);
+
+    // std::cout << "element size : " << num_of_elements << std::endl;
+    // std::cout << "BEFORE INSERTION TO MAIN CHAIN" << std::endl;
+
+    // while (++i < (int)v.size())
+    // {
+    //     j = -1;
+    //     while (++j < (int)v[i].size())
+    //     {
+    //         std::cout << v[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << "*******************************" << std::endl;
+
     _main_chain.clear();
     _pend.clear();
     _main_chain.reserve(v.size());
     
+    
+    
+    // std::cout << std::endl;
+    // std::cout << std::endl;
+
     temp.clear();
     if ((int)v.back().size() != num_of_elements)
     {
@@ -190,21 +249,19 @@ void    PmergeMe::insertion_sort(vect_int& data)
         _pend.push_back(make_pair(*(it), tmp));  
         it += 2;
     }
-    // if (num_of_elements == 1 && rest != -1)
-    // {  
-    //     vect_int v2(1, rest);
-    //     _pend.push_back(make_pair(v2, _main_chain.end()));
-    // }
     insert_pend_to_chain();
+    
     if (temp.size())
-    {
-        _main_chain.insert(_main_chain.end(), temp);
-        std::cout << "here" << std::endl;
-    }
+        {
+            // it = std::lower_bound(_main_chain.begin(), _main_chain.end(), temp , compare);
+            _main_chain.insert(_main_chain.end(), temp);
+        }
 
-    // std::cout << "*****MAIN CHAIN*****\n";
+    // std::cout << "******* MAIN CHAIN**********" << std::endl;
     // print_pairs(_main_chain);
-    // std::cout << "*****END CHAIN*****\n";
+    // std::cout << "******* END CHAIN**********" << std::endl;
+    // std::cout << std::endl;
+
     // insert pend to chain 
     // insert last element
 
@@ -231,38 +288,21 @@ void    PmergeMe::merge_sort(vect_int& data)
   
     v = make_pairs(data);
 
-   
-    if (data.size() % 2 && rest == -1)
-    {
-        std::cout << "rr" << std::endl;
-        rest = data.back();
-        data.pop_back();
-    }
+    // std::cout << "BEFORE SORT" << std::endl;
+    // print_pairs(v);
+    // std::cout << "***********" << std::endl;
+    sort_each_pair(v);
+    // std::cout << "AFTER SORT" << std::endl;
+    // print_pairs(v);
+    // std::cout << "***********" << std::endl;
 
-
-    sort_pairs(v);
     copy_elements_to_data(data, v);
- 
-    if (v.size() >= 4) //size ) 
+    if (v.size() >= 4 || (int)v.back().size() == num_of_elements) 
     {
-        //insert
-        
-        //make_pairs
-        //main chain pend;
         num_of_elements *= 2;
         merge_sort(data);
-        //copy
-        //elmn_size /= 2;
     }
     insertion_sort(data);
-    // std::cout << "\n";
-    // std::cout << "original vector" << std::endl;
-    //vect_int::iterator it = data.begin();
-    /*while (it != data.end())
-    {
-	std::cout << *it << std::endl;
-	it++;
-    }*/	    
    
 }
 
