@@ -14,12 +14,14 @@ int     main(int ac, char **av)
     std::vector<int> v;
     int     i = 1;
 
-    // 20 10 9 1 6 21 13 19 14 5 8 7 3 9 19 2 16 5 21 13 13
+    
     (void)ac;
     while (av[i])
     {
+        std::cout << av[i] << " ";
         v.push_back(std::atoi(av[i++]));
     }
+    std::cout << std::endl;
     PmergeMe a;
 
     a.merge_sort(v);
