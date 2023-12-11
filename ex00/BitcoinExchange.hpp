@@ -20,18 +20,18 @@ class BitcoinExchange
         ~BitcoinExchange();
 
         void    extract_data(std::string file);
-	std::pair<std::string, float> checkData(std::string value) const;
-	int     checkDateValue(int& year, int& month, int& day) const;
-	int	checkYear(int& year) const;  
-	int	checkMonth(int& year, int& month) const;  
-	int	checkDay(int& year, int& month, int& day) const;
-	std::string	badInput(std::string& value) const;
-	tm      *getTime() const;
-	void    printRecord(const std::pair<std::string, float>& p);	
-//extract data
-    //parse
-    //print_data
+        std::pair<std::string, float> checkData(std::string value) const;
+        int     checkDateValue(int& year, int& month, int& day) const;
+        int	checkYear(int& year) const;  
+        int	checkMonth(int& year, int& month) const;  
+        int	checkDay(int& year, int& month, int& day) const;
+        std::string	badInput(std::string& value) const;
+        tm      *getTime() const;
+        void    printRecord(const std::pair<std::string, float>& p);	
+        int		spaceNum(const std::string&	value) const;
+
     private:   
+    
         BitcoinExchange();
         std::map<std::string, float> dictionary;
 };

@@ -1,5 +1,5 @@
 #include "BitcoinExchange.hpp"
-#include <string>
+
 
 int     main(int ac ,char **av)
 {
@@ -18,7 +18,4 @@ int     main(int ac ,char **av)
         std::cout << exp.what() << std::endl;   
     }
     return (0);
-    //sscanf(const char *, const char *, ...);
-    //find for string manipulation
-    //substr
 }

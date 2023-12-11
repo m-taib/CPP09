@@ -1,0 +1,14 @@
+date | value                         handled
+espace before pipe and after it   handled
+the output of multiplication     handled
+line Empty                      handled
+
+2021-01-05 | 44g
+2023-12-08 |4 20
+2023-12- 08 | 20
+2023-12-08 | 99999999999999999999999999999999999898gh9898989898
+2023-12-08 | 9-9
+
+2023-12-08 | 99999999999999999999999999999999999898 => last record
+
+max_float | min_int
