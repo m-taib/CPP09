@@ -1,9 +1,5 @@
 #include "BitcoinExchange.hpp"
-#include <_types/_intmax_t.h>
-#include <cctype>
-#include <cstring>
-#include <stdexcept>
-#include <string>
+
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -37,7 +33,7 @@ BitcoinExchange::BitcoinExchange(std::string fileName)
         file.close();
     }
     else 
-        throw  std::invalid_argument("Error: File cannot be opened");
+        throw  std::invalid_argument("Error: could not open file.");
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& rhs)
@@ -94,12 +90,12 @@ int	BitcoinExchange::checkDay(int& year, int& month, int& day) const
 		if (day > 29)
 		 	  return (0);
 	}
-   	else if (month == 2)
+	else if (month == 2)
 	{
 	    if (day > 28)
 		 	  return (0);
 	}
-    else if (month == 4 || month == 6 || month == 9 || month == 11)
+	else if (month == 4 || month == 6 || month == 9 || month == 11)
 	{
 		if (day > 30)
 			   return (0);
@@ -121,7 +117,6 @@ std::string BitcoinExchange::badInput(std::string& value) const
 
 int	BitcoinExchange::checkDateValue(int& year, int& month, int& day) const
 {
-	//check if the date greater than the creation time
 	if (checkYear(year))
 		if (checkMonth(year, month))
 			if (checkDay(year, month, day))
@@ -160,6 +155,18 @@ int		is_alpha(std::string& str)
 		return (1);
 	while (str[i])
 	{
+		if (str[i] == '+')
+		{
+			i++;
+			while (str[i] && str[i] != ' ' && str[i] != '.')
+			{
+				if (!std::isdigit(str[i]))
+					return (1);
+				i++;
+			}
+			if (!str[i])
+				break;
+		}
 		if (str[i] == ' ' || (!std::isdigit(str[i]) && str[i] != '.')
 				|| (str[i] == '.' && (!str[i + 1] || str[i + 1] == '.')))
 			return (1);
@@ -190,18 +197,16 @@ std::pair<std::string, float>   BitcoinExchange::checkData(std::string value) co
 	}
 	else if (value.find("|"))
 	{
-		
 		copy = value.substr(value.find("|") + 1, value.length());
 		if (copy[0] != ' ' || is_alpha(copy))
 		{
-			throw std::invalid_argument("Error: bad input =>" + value);
+			if (price < 0)
+				throw std::invalid_argument("Error: not a positive number");
+			else
+				throw std::invalid_argument("Error: bad input =>" + value);
 		}
 	}
-	if (price < 0)
-		throw std::invalid_argument("Error: not a positive number");
-	else if (price == 0)
-		throw std::invalid_argument("Error: too small number");
-	else if (price >= 1000)
+	if (price > 1000)
 		throw std::invalid_argument("Error: too large number");
 	if (checkDateValue(year, month, day))
 			return (std::make_pair(strtok((char *)value.c_str(), " ")
@@ -268,7 +273,7 @@ void    BitcoinExchange::extract_data(std::string fileName)
         file.close();
     }
     else 
-      	throw  std::invalid_argument("Error: File cannot be opened");
+      	throw  std::invalid_argument("Error: could not open file.");
     
 }
 

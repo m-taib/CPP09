@@ -1,44 +1,34 @@
 #include "PmergeMe.hpp"
-#include <vector>
+#include <exception>
 
-void    print_elements(std::vector<int>& v)
-{
-    int		i = -1;
-    while (++i < (int)v.size())
-    {
-        std::cout << v[i] << " ";
-    }
-}
+// Before: 3 5 9 7 4
+// After: 3 4 5 7 9
+// Time to process a range of 5 elements with std::[..] : 0.00031 us
+// Time to process a range of 5 elements with std::[..] : 0.00014 us
+
 int     main(int ac, char **av)
 {
-    std::vector<int> v;
-    int     i = 1;
+    long    start_time;
+    long    elapsed_time;
 
-    
-    (void)ac;
-    while (av[i])
-    {
-        std::cout << av[i] << " ";
-        v.push_back(std::atoi(av[i++]));
+    if (ac < 2)
+    { 
+        std::cout << "Invalid number of arguments" << std::endl;
+        return (0);
     }
-    std::cout << std::endl;
-    PmergeMe a;
-
-    a.merge_sort(v);
-    i = -1;
-    std::cout << "sorted : " ;
-    while (++i < (int)v.size())
+    try 
     {
-        if (i + 1 == (int)v.size())
-            break ;
-	    if (v[i] > v[i + 1])
-        {
-                std::cout << "no" << std::endl;
-                print_elements(v);
-                return (1);
-        }
+        start_time = gettime();
+        vector_implementation(av);
+        elapsed_time = gettime();
+        std::cout << elapsed_time - start_time << " us" << std::endl;
+        start_time = gettime();
+        list_implementation(av);
+        elapsed_time = gettime();
+        std::cout << elapsed_time - start_time << " us" << std::endl;
     }
-    std::cout << "yes" << std::endl;
-    print_elements(v);
-    std::cout << "\nnumber of comparisons : " << a.getComparisonsNum() << std::endl;
+    catch (const std::exception& exp)
+    {
+        std::cout << exp.what() << std::endl;
+    }
 }

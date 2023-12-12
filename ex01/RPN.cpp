@@ -41,8 +41,8 @@ void	Rpn::performOp(std::stack<int>& s, const std::string& op)
 	s.pop();
 	lval = s.top();
 	s.pop();
-	if (op[0] == '+')
-		res = lval + rval;
+    if (op[0] == '+')
+        res = lval + rval;
     else if (op[0] == '-')
 		res = lval - rval;
     else if (op[0] == '/')
@@ -60,7 +60,21 @@ int    Rpn::is_alnum(const char *av)
 {
     while (*av)
     {
-        if (!std::isalnum(*av))
+        if (*av == '+' || *av == '-')
+        {
+            av++;
+            if (!*av)
+                throw std::invalid_argument("Error");
+            while (*av)
+            {
+                if (!std::isalnum(*av))
+                    throw std::invalid_argument("Error");
+                av++;
+            }
+            if (!*av)
+                break ;
+        }
+        else if (!std::isalnum(*av))
             throw std::invalid_argument("Error");
         av++;
     }
@@ -76,23 +90,24 @@ int     Rpn::checkSep(const std::string value)
 }
 void    Rpn::stackManip(char *av)
 {
-    
     char * value;
 
+    if (!av[0]) 
+        throw std::invalid_argument("Error");
     value = std::strtok(av, " ");
 	while (value)
 	{
-		if (calcStack.size() >= 2 && isOperator(value))
-        {
+        if (std::atoi(value) >= 10 || std::atoi(value) < 0)
+            throw std::invalid_argument("Error");
+        if (calcStack.size() >= 2 && isOperator(value))
             performOp(calcStack, value);
-        }
         else if (is_alnum(value))
             calcStack.push(std::atoi(value));
         else
             throw std::invalid_argument("Error");
         value = strtok(NULL, " ");
 	}
-    if (calcStack.size() == 2)
+    if (calcStack.size() >= 2)
         throw std::invalid_argument("Error");
 	std::cout << calcStack.top() << std::endl;
 }

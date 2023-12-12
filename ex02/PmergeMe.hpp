@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <sys/time.h>
 
 typedef  std::vector<int> vect_int;
 typedef  std::vector< std::pair<vect_int, std::vector<vect_int>::iterator> > pend_vec;
@@ -27,7 +28,7 @@ class   PmergeMe
         void    insertion_sort(vect_int& data);
         void    insert_pend_to_chain();
         void    update_iterators(pend_vec::iterator begin, std::vector<vect_int>::iterator pos);
-
+        void    print_pairs(std::vector<vect_int >& lst);
 
        
 
@@ -38,8 +39,10 @@ class   PmergeMe
         void    copy_elements_to_data(std::list<int>& data, std::list<std::list<int> >& v);
         void    insertion_sort(list_int& data);
         void    insert_list_pend_to_chain();
-
+        void    print_pairs(std::list<list_int >& lst);
         int     getComparisonsNum() const;
+        
+        
 
     private:
 
@@ -55,4 +58,21 @@ class   PmergeMe
 
 
 };
+
+template<typename T>
+void    print_elements(T& lst)
+{
+    typename T::iterator it = lst.begin();
+
+    while (it != lst.end())
+    {
+        std::cout << *it << " ";
+        it++;
+    }
+}
+
+void    vector_implementation(char **av);
+void    list_implementation(char **av);
+long	gettime(void);
+
 #endif

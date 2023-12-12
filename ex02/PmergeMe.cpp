@@ -1,4 +1,6 @@
 #include "PmergeMe.hpp"
+#include <cctype>
+#include <stdexcept>
 
 
 int     comp_num;
@@ -15,7 +17,6 @@ PmergeMe::PmergeMe(const PmergeMe& rhs)
 
 PmergeMe&   PmergeMe::operator=(const PmergeMe& rhs)
 {
-
     _num_of_elements = rhs._num_of_elements;
     _v = rhs._v;
     _list = rhs._list;
@@ -156,10 +157,11 @@ void    PmergeMe::insert_pend_to_chain()
         while (true)
         {
             it = std::lower_bound(_vec_main_chain.begin(), begin->second, 
-            begin->first, compare);
+                begin->first, compare);
             _vec_main_chain.insert(it, begin->first);
-            _vec_pend.erase(begin);
+             _vec_pend.erase(begin);
             update_iterators(_vec_pend.begin(), it);
+           
             if (begin == _vec_pend.begin())
                 break ;
             begin--;
@@ -169,28 +171,27 @@ void    PmergeMe::insert_pend_to_chain()
 
 }
 
-// void    PmergeMe::insert_pend_to_chain()
-// {
-//     pend_vec::iterator begin = _pend.begin();
-//     pend_vec::iterator end = _pend.end();
-//     std::vector<vect_int>::iterator it;
-    
-//     while (begin != end)
-//     {   
-//         it = std::lower_bound(_main_chain.begin(), begin->second, begin->first, compare);
-//         _main_chain.insert(it, begin->first);
-//         update_iterators(begin + 1, it);
-//         begin++;
-//     }
-
-// }
 
 int     PmergeMe::getComparisonsNum() const
 {
     return (comp_num);
 }
 
+// void    PmergeMe::insert_pend_to_chain()
+// {
+//     pend_vec::iterator begin = _vec_pend.begin();
+//     pend_vec::iterator end = _vec_pend.end();
+//     std::vector<vect_int>::iterator it;
+    
+//     while (begin != end)
+//     {   
+//         it = std::lower_bound(_vec_main_chain.begin(), begin->second, begin->first, compare);
+//         _vec_main_chain.insert(it, begin->first);
+//         update_iterators(begin + 1, it);
+//         begin++;
+//     }
 
+// }
     
 void    PmergeMe::insertion_sort(vect_int& data)
 {
@@ -199,33 +200,11 @@ void    PmergeMe::insertion_sort(vect_int& data)
     std::vector<vect_int>::iterator it;
     std::vector<vect_int>::iterator tmp;
     int     i = -1;
-    // int     j = -1;
     
     v = make_pairs(data);
-
-    // std::cout << "element size : " <<_num_of_elements << std::endl;
-    // std::cout << "BEFORE INSERTION TO MAIN CHAIN" << std::endl;
-
-    // while (++i < (int)v.size())
-    // {
-    //     j = -1;
-    //     while (++j < (int)v[i].size())
-    //     {
-    //         std::cout << v[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // std::cout << "*******************************" << std::endl;
-
     _vec_main_chain.clear();
     _vec_pend.clear();
     _vec_main_chain.reserve(v.size());
-    
-    
-    
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-
     temp.clear();
     if ((int)v.back().size() !=_num_of_elements)
     {
@@ -250,52 +229,19 @@ void    PmergeMe::insertion_sort(vect_int& data)
     insert_pend_to_chain();
     
     if (temp.size())
-        {
-            // it = std::lower_bound(_vec_main_chain.begin(), _vec_main_chain.end(), temp , compare);
-            _vec_main_chain.insert(_vec_main_chain.end(), temp);
-        }
-
-    // std::cout << "******* MAIN CHAIN**********" << std::endl;
-    // print_pairs(_vec_main_chain);
-    // std::cout << "******* END CHAIN**********" << std::endl;
-    // std::cout << std::endl;
-
-    // insert pend to chain 
-    // insert last element
-
-    // when u test with a fixed range u have to update iterator of pend elements 
-        // if it have a pos >= inserted position  u have to decale it by 1
-    
+        _vec_main_chain.insert(_vec_main_chain.end(), temp);
     copy_elements_to_data(data, _vec_main_chain);
-     
-_num_of_elements /= 2;
+    _num_of_elements /= 2;
 }
 
-/*
- * make_pairs : create vector of vectors, every vector has n elements depends on num of elements must have of every call
- * sort_pairs : compare elements of every pair : compare last element of every one
- * copy_to_original_data : copy elements to the original data to process it again 
- * if we dont have a pair of elements then we stop 
- *
- *
-*/
 void    PmergeMe::merge_sort(vect_int& data)
 {
     std::vector<vect_int> v;
     
-  
     v = make_pairs(data);
-
-    // std::cout << "BEFORE SORT" << std::endl;
-    // print_pairs(v);
-    // std::cout << "***********" << std::endl;
     sort_each_pair(v);
-    // std::cout << "AFTER SORT" << std::endl;
-    // print_pairs(v);
-    // std::cout << "***********" << std::endl;
-
     copy_elements_to_data(data, v);
-    if (v.size() >= 4 || (int)v.back().size() ==_num_of_elements) 
+    if (v.size() >= 4 && (int)v[3].size() ==_num_of_elements) 
     {
         _num_of_elements *= 2;
         merge_sort(data);
@@ -353,19 +299,19 @@ void    PmergeMe::sort_each_pair(std::list<list_int>& lst)
     std::list<list_int>::iterator begin = lst.begin();
     std::list<list_int>::iterator end = lst.end();
     std::list<list_int>::iterator tmp_it;
-    int     j = -1;
+    int     j;
 
     while (begin != end)
     {
+        j = -1;
         tmp_it = begin;
         tmp_it++;
-	    if (tmp_it == end)
+	    if ((int)tmp_it->size() != _num_of_elements)
 		    break ;
 	    it = begin;
 	    ++it;
         comp_num++;
-	    if ((int)it->size() ==_num_of_elements 
-              && it->back() < begin->back())
+	    if (it->back() < begin->back())
 	    {
             tmp = *begin;
             *begin = *it;
@@ -412,20 +358,13 @@ void    PmergeMe::insert_list_pend_to_chain()
 
     std::list<list_int>::iterator it;
     int		i = 0;
-    long int     jacob_sthal[] = { 
+    int     j;
+    long int     jacob_sthal[] = {
 	   2, 2, 6, 10, 22, 42, 86, 170, 342, 682, 1366,
         2730, 5462, 10922, 21846, 43690, 87382, 174762, 349526, 699050,
         1398102, 2796202, 5592406, 11184810, 22369622, 44739242, 89478486,
         178956970, 357913942, 715827882, 1431655766, 2863311530, 5726623062,
         11453246122, 22906492246, 45812984490 };
-
-  
-    // int     j = -1;
-    
-    // with jacob sthal number we will what we have to push first 
-    // we will push more than 1 element at time
-    	// from end to begin
-    int     j;
 
     while (_list_pend.size())
     {  
@@ -439,11 +378,11 @@ void    PmergeMe::insert_list_pend_to_chain()
             end--;
         while (true)
         {
-            it = std::lower_bound(_list_main_chain.begin(), _list_main_chain.end(), 
+            it = std::lower_bound(_list_main_chain.begin(), end->second, 
                             end->first, compare_list);
             _list_main_chain.insert(it, end->first);
             _list_pend.erase(end);
-            if (end == _list_pend.begin())
+            if (end == begin)
                 break ;
             end--;
         }
@@ -460,34 +399,12 @@ void    PmergeMe::insertion_sort(list_int& data)
     std::list<list_int>::iterator tmp_it;
     std::list<list_int>::iterator tmp;
     int     i = -1;
-    // int     j = -1;
     
     lst = make_pairs(data);
 
-    // std::cout << "element size : " <<_num_of_elements << std::endl;
-    // std::cout << "BEFORE INSERTION TO MAIN CHAIN" << std::endl;
-
-    // while (++i < (int)lst.size())
-    // {
-    //     j = -1;
-    //     while (++j < (int)lst[i].size())
-    //     {
-    //         std::cout << lst[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // std::cout << "*******************************" << std::endl;
-
     _list_main_chain.clear();
     _list_pend.clear();
-    _list_main_chain.resize(lst.size());
-    // _list_main_chain.reserve(lst.size());
-    
-    
-    
-    // std::cout << std::endl;
-    // std::cout << std::endl;
-
+   
     temp.clear();
     if ((int)lst.back().size() !=_num_of_elements)
     {
@@ -502,7 +419,7 @@ void    PmergeMe::insertion_sort(list_int& data)
     while (it != lst.end())
     {
         i = -1;
-        tmp = it;
+        tmp_it = it;
         tmp_it++;
         if (tmp_it == lst.end())
         {
@@ -512,29 +429,13 @@ void    PmergeMe::insertion_sort(list_int& data)
         tmp = _list_main_chain.insert(_list_main_chain.end(), *(tmp_it));
         _list_pend.push_back(make_pair(*(it), tmp));  
         while (++i < 2)
-             it++;
+            it++;
     }
     insert_list_pend_to_chain();
     
     if (temp.size())
-    {
-        // it = std::lower_bound(_main_chain.begin(), _main_chain.end(), temp , compare);
-        _list_main_chain.insert(_list_main_chain.end(), temp);
-    }
-
-    // std::cout << "******* MAIN CHAIN**********" << std::endl;
-    // print_pairs(_main_chain);
-    // std::cout << "******* END CHAIN**********" << std::endl;
-    // std::cout << std::endl;
-
-    // insert pend to chain 
-    // insert last element
-
-    // when u test with a fixed range u have to update iterator of pend elements 
-        // if it have a pos >= inserted position  u have to decale it by 1
-    
+        _list_main_chain.insert(_list_main_chain.end(), temp);    
     copy_elements_to_data(data, _list_main_chain);
-     
     _num_of_elements /= 2;
 }
 
@@ -544,28 +445,115 @@ void    PmergeMe::merge_sort(list_int& data)
     
   
     lst = make_pairs(data);
+   
 
-    // std::cout << "BEFORE SORT" << std::endl;
-    // print_pairs(lst);
-    // std::cout << "***********" << std::endl;
     sort_each_pair(lst);
-    // std::cout << "AFTER SORT" << std::endl;
-    // print_pairs(lst);
-    // std::cout << "***********" << std::endl;
-
     copy_elements_to_data(data, lst);
     if (lst.size() >= 4 || (int)lst.back().size() ==_num_of_elements) 
     {
         _num_of_elements *= 2;
         merge_sort(data);
-    }
-    
+    }  
     insertion_sort(data);
-   
 }
 
 /*********************************************/
 
+void    checkElemenets(char *str)
+{
+    int     i;
+
+    i = 0;
+    while (str[i])
+    {
+        if (!std::isdigit(str[i]) ||
+                str[0] == '-')
+        {
+            throw std::invalid_argument("Error");
+        }
+        i++;
+    }
+}
+void    vector_implementation(char **av)
+{
+    std::vector<int> v;
+    int     i = 1;
+    PmergeMe a;
+
+    while (av[i])
+    {
+        checkElemenets(av[i]);
+        v.push_back(std::atoi(av[i++]));
+    }
+    std::cout << "Before: " ;
+    print_elements(v);
+    std::cout << std::endl;
+    a.merge_sort(v);
+    i = -1;
+    std::cout << "After : " ;
+    while (++i < (int)v.size())
+    {
+        if (i + 1 == (int)v.size())
+            break ;
+	    if (v[i] > v[i + 1])
+        {
+                std::cout << "NOT SORTED" << std::endl;
+                return ;
+        }
+    }
+    print_elements(v);
+    std::cout << "\nTime to process a range of "<< v.size() << " elements with std::[vector] : ";
+    // std::cout << "\nnumber of comparisons : " << a.getComparisonsNum() << std::endl;
+}
+// Before: 3 5 9 7 4
+// After: 3 4 5 7 9
+// Time to process a range of 5 elements with std::[..] : 0.00031 us
+// Time to process a range of 5 elements with std::[..] : 0.00014 us
+
+void    list_implementation(char **av)
+{
+    std::list<int> lst;
+    std::list<int>::iterator tmp;
+    std::list<int>::iterator begin = lst.begin();
+    int     i = 1;
+    PmergeMe a;
+    // std::cout << "Before: " ;
+    while (av[i])
+    {
+        // std::cout << av[i] << " ";
+        checkElemenets(av[i]);
+        lst.push_back(std::atoi(av[i++]));
+    }
+    // std::cout << std::endl;
+    
+    a.merge_sort(lst);
+    i = -1;
+    // std::cout << "After : " ;
+    while (begin != lst.end())
+    {
+        tmp = begin;
+        tmp++;
+        if (tmp == lst.end())
+            break ;
+	    if (*begin > *tmp)
+        {
+            std::cout << "NOT SORTED" << std::endl;
+            return ;
+        }
+        begin++;
+    }
+    // print_elements(lst);
+    std::cout << "Time to process a range of "<< lst.size() << " elements with std::[list] : ";
+    // std::cout << "\nnumber of comparisons : " << a.getComparisonsNum() << std::endl;
+}
+
+long	gettime(void)
+{
+	struct timeval	curr_time;
+
+	gettimeofday(&curr_time, NULL);
+    return (1000000 * curr_time.tv_sec + curr_time.tv_usec);
+}
 PmergeMe::~PmergeMe()
 {
     
